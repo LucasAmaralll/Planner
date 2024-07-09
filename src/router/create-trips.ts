@@ -30,14 +30,20 @@ export async function createTrip(app: FastifyInstance) {
             throw new Error ('Invalid trip end date.')
         }
 
-
         const trip = await prisma.trip.create ({
             data: {
                 destination,
                 starts_at,
                 ends_at,
+                participants: {
+                    create: {
+                        name: owner_name,
+                        email: owner_email,
+                        is_owner: true,
+                    }
+                }
             }
-        })
+        });
 
 
         const mail = await getMailClient()

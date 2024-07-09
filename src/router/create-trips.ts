@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { z } from "zod";
 import { prisma } from "../lib/prisma";
 import { getMailClient } from "../lib/mail";
+import nodemailer from 'nodemailer';
 
 export async function createTrip(app: FastifyInstance) {
     // get, post, put, patch, delete
@@ -29,6 +30,7 @@ export async function createTrip(app: FastifyInstance) {
             throw new Error ('Invalid trip end date.')
         }
 
+
         const trip = await prisma.trip.create ({
             data: {
                 destination,
@@ -37,11 +39,23 @@ export async function createTrip(app: FastifyInstance) {
             }
         })
 
+
         const mail = await getMailClient()
 
-        await mail.sendMail ({
-
+        const message = await mail.sendMail ({
+            from: {
+                name: 'Equipe plann.er',
+                address: 'oi@plann.er',
+            },
+            to: {
+                name: owner_name,
+                address: owner_email,
+            },
+            subject: 'Testando o envio de e-mail',
+            html: '<p>Teste do envio de e-mail</p>'
         })
+
+        console.log (nodemailer.getTestMessageUrl(message))
 
         return { tripId: trip.id } 
     })

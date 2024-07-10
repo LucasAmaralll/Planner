@@ -15,6 +15,8 @@ model Trip {
   is_confirmed Boolean       @default(false)
   created_at   DateTime      @default(now()) //@default indica que o campo já vai vir preenchido
   participants Participant[]
+  activities   Activity[]
+  links        Link[]
 
   @@map("trips")
 }
@@ -29,4 +31,26 @@ model Participant {
   trip         Trip    @relation(fields: [trip_id], references: [id])
 
   @@map("participants")
+}
+
+model Activity {
+  id        String   @id @default(uuid()) // @id indica minha PK
+  title     String
+  occurs_at DateTime
+
+  trip_id String
+  trip    Trip   @relation(fields: [trip_id], references: [id])
+
+  @@map("activities")
+}
+
+model Link {
+  id    String @id @default(uuid()) // @id indica minha PK
+  title String
+  url   String
+
+  trip_id String
+  trip    Trip   @relation(fields: [trip_id], references: [id])
+
+  @@map("links")
 }

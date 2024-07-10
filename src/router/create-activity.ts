@@ -47,7 +47,7 @@ export async function createActivity(app: FastifyInstance) {
             }
         })
 
-        return { activityId: trip.id } 
+        return { activityId: activity.id } 
     })
 }
 
